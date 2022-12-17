@@ -1,7 +1,11 @@
 # phat_qr_code
 
-- [x] generate javascript/HTML app
-- [x] launcher icons
-- [x] launch the extension 
-- [x] add qr_code library
-- [ ] add UI
+![](images/demo.gif)
+
+# TODO
+- [x] Generate javascript/HTML app from flutter
+- [x] Add launcher icons
+- [x] Config to launch the extension 
+- [x] Add QR code library
+- [x] Add UI
+- [ ] Save QR code
