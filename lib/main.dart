@@ -1,7 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:math';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:screenshot/screenshot.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,6 +34,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String data = "http://google.com";
   var controller = TextEditingController();
+  var screenshotController = ScreenshotController();
   @override
   void initState() {
     super.initState();
@@ -42,39 +48,93 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(
-              controller: controller,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter QR Text',
-              ),
-              onChanged: (value) => setState(() => data = value),
-            ),
+            buildQRText(),
             SizedBox(
               height: 16,
             ),
-            QrImage(
-              data: data,
-              foregroundColor: Colors.cyan,
+            Expanded(
+              child: buildQrImage(),
             ),
             SizedBox(
               height: 32,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Text("SAVE"),
-                  ),
-                )
-              ],
-            )
+            buildBottomBar(context)
           ],
         ),
       ),
+    );
+  }
+
+  void saveDesktop(BuildContext context) async {
+    try {
+      var fileName = data.replaceAll(RegExp(r'[:/\#?=]'), '_');
+      fileName = fileName.substring(0, min(fileName.length, 40));
+      var p = await FilePicker.platform.saveFile(
+        dialogTitle: "Save QR Image",
+        fileName: "$fileName.png",
+        allowedExtensions: ["png", "jpg"],
+        type: FileType.custom,
+      );
+      if (p == null) return;
+
+      screenshotController.captureAndSave(
+        dirname(p),
+        fileName: basename(p),
+      );
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Saved to $p"),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("$e"),
+        ),
+      );
+    }
+  }
+
+  Row buildBottomBar(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: () => saveDesktop(context),
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Text("Save to Desktop"),
+          ),
+        ),
+        ElevatedButton(
+          onPressed: (() => {}),
+          child: Text("Save to Google Drive"),
+        ),
+      ],
+    );
+  }
+
+  Screenshot buildQrImage() {
+    return Screenshot(
+      controller: screenshotController,
+      child: QrImage(
+        data: data,
+        foregroundColor: Colors.cyan,
+      ),
+    );
+  }
+
+  TextField buildQRText() {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        hintText: 'Enter QR Text',
+      ),
+      onChanged: (value) => setState(() => data = value),
     );
   }
 }
