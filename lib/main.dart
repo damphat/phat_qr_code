@@ -106,12 +106,18 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: () => saveDesktop(context),
           child: Padding(
             padding: EdgeInsets.all(16),
-            child: Text("Save to Desktop"),
+            child: Text("To Desktop"),
           ),
         ),
+        SizedBox(
+          width: 16,
+        ),
         ElevatedButton(
-          onPressed: (() => {}),
-          child: Text("Save to Google Drive"),
+          onPressed: (() => TODO(context, "Save to your Google Drive")),
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Text("To Google Drive"),
+          ),
         ),
       ],
     );
@@ -135,6 +141,18 @@ class _MyHomePageState extends State<MyHomePage> {
         hintText: 'Enter QR Text',
       ),
       onChanged: (value) => setState(() => data = value),
+    );
+  }
+
+  void TODO(BuildContext context, String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.yellow,
+        content: Text(
+          text,
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
     );
   }
 }
