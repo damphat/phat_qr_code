@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:phat_qr_code/utils.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -141,18 +142,6 @@ class _MyHomePageState extends State<MyHomePage> {
         hintText: 'Enter QR Text',
       ),
       onChanged: (value) => setState(() => data = value),
-    );
-  }
-
-  void TODO(BuildContext context, String text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.yellow,
-        content: Text(
-          text,
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
     );
   }
 }
