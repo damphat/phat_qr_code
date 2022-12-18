@@ -14,7 +14,9 @@
     - [ ] Upload the file to a server, then download via URL.
     - [ ] Is it possible to create and save a file using browser API?
 - [ ] Save to google drive
-- [ ] Multilanguage
+- [ ] Multilanguage:
+  - [ ] UI for switching between english and vietnamese
+- [ ] Create a release macOS package.
 
 # ISSUES
 - [x] Do not use BuildContexts across async gaps
